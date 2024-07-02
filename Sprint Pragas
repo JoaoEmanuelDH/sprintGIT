@@ -1,0 +1,505 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "provenance": [],
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    },
+    "language_info": {
+      "name": "python"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/JoaoEmanuelDH/sprintGIT/blob/main/Sprint%20Pragas\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "collapsed": true,
+        "id": "BHjAUtTon4Ys",
+        "outputId": "762bd64a-f42e-4c6d-d98b-89f5cab70fd9"
+      },
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Collecting selenium\n",
+            "  Downloading selenium-4.22.0-py3-none-any.whl (9.4 MB)\n",
+            "\u001b[2K     \u001b[90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\u001b[0m \u001b[32m9.4/9.4 MB\u001b[0m \u001b[31m46.3 MB/s\u001b[0m eta \u001b[36m0:00:00\u001b[0m\n",
+            "\u001b[?25hRequirement already satisfied: urllib3[socks]<3,>=1.26 in /usr/local/lib/python3.10/dist-packages (from selenium) (2.0.7)\n",
+            "Collecting trio~=0.17 (from selenium)\n",
+            "  Downloading trio-0.25.1-py3-none-any.whl (467 kB)\n",
+            "\u001b[2K     \u001b[90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\u001b[0m \u001b[32m467.7/467.7 kB\u001b[0m \u001b[31m44.3 MB/s\u001b[0m eta \u001b[36m0:00:00\u001b[0m\n",
+            "\u001b[?25hCollecting trio-websocket~=0.9 (from selenium)\n",
+            "  Downloading trio_websocket-0.11.1-py3-none-any.whl (17 kB)\n",
+            "Requirement already satisfied: certifi>=2021.10.8 in /usr/local/lib/python3.10/dist-packages (from selenium) (2024.6.2)\n",
+            "Requirement already satisfied: typing_extensions>=4.9.0 in /usr/local/lib/python3.10/dist-packages (from selenium) (4.12.2)\n",
+            "Requirement already satisfied: websocket-client>=1.8.0 in /usr/local/lib/python3.10/dist-packages (from selenium) (1.8.0)\n",
+            "Requirement already satisfied: attrs>=23.2.0 in /usr/local/lib/python3.10/dist-packages (from trio~=0.17->selenium) (23.2.0)\n",
+            "Requirement already satisfied: sortedcontainers in /usr/local/lib/python3.10/dist-packages (from trio~=0.17->selenium) (2.4.0)\n",
+            "Requirement already satisfied: idna in /usr/local/lib/python3.10/dist-packages (from trio~=0.17->selenium) (3.7)\n",
+            "Collecting outcome (from trio~=0.17->selenium)\n",
+            "  Downloading outcome-1.3.0.post0-py2.py3-none-any.whl (10 kB)\n",
+            "Requirement already satisfied: sniffio>=1.3.0 in /usr/local/lib/python3.10/dist-packages (from trio~=0.17->selenium) (1.3.1)\n",
+            "Requirement already satisfied: exceptiongroup in /usr/local/lib/python3.10/dist-packages (from trio~=0.17->selenium) (1.2.1)\n",
+            "Collecting wsproto>=0.14 (from trio-websocket~=0.9->selenium)\n",
+            "  Downloading wsproto-1.2.0-py3-none-any.whl (24 kB)\n",
+            "Requirement already satisfied: pysocks!=1.5.7,<2.0,>=1.5.6 in /usr/local/lib/python3.10/dist-packages (from urllib3[socks]<3,>=1.26->selenium) (1.7.1)\n",
+            "Collecting h11<1,>=0.9.0 (from wsproto>=0.14->trio-websocket~=0.9->selenium)\n",
+            "  Downloading h11-0.14.0-py3-none-any.whl (58 kB)\n",
+            "\u001b[2K     \u001b[90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\u001b[0m \u001b[32m58.3/58.3 kB\u001b[0m \u001b[31m9.8 MB/s\u001b[0m eta \u001b[36m0:00:00\u001b[0m\n",
+            "\u001b[?25hInstalling collected packages: outcome, h11, wsproto, trio, trio-websocket, selenium\n",
+            "Successfully installed h11-0.14.0 outcome-1.3.0.post0 selenium-4.22.0 trio-0.25.1 trio-websocket-0.11.1 wsproto-1.2.0\n",
+            "ERROR: unknown command \"intall\" - maybe you meant \"install\"\n"
+          ]
+        }
+      ],
+      "source": [
+        "!pip install selenium\n",
+        "!pip intall webdriver-manager"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "from selenium import webdriver\n",
+        "from selenium.webdriver.chrome.options import Options\n",
+        "\n",
+        "chrome_options = Options()\n",
+        "chrome_options.add_argument('--headless')\n",
+        "chrome_options.add_argument('--no-sandbox')\n",
+        "chrome_options.add_argument('--disable-dev-shm-usage')\n",
+        "\n",
+        "driver = webdriver.Chrome(options=chrome_options)\n",
+        "driver.get('https://www.canalrural.com.br/?s=pragas')\n",
+        "\n",
+        "with open(\"CanalRural.xml\",\"w\") as arq:\n",
+        "  arq.write(driver.page_source)\n",
+        "\n",
+        "driver.quit()"
+      ],
+      "metadata": {
+        "id": "oMwdP3SHn8P2"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "!pip install beautifulsoup4"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "collapsed": true,
+        "id": "ffVyLb4Un-q2",
+        "outputId": "a15daba6-3b6e-417b-ca80-64ced38ef1cd"
+      },
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Requirement already satisfied: beautifulsoup4 in /usr/local/lib/python3.10/dist-packages (4.12.3)\n",
+            "Requirement already satisfied: soupsieve>1.2 in /usr/local/lib/python3.10/dist-packages (from beautifulsoup4) (2.5)\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "from bs4 import BeautifulSoup\n",
+        "arquivoXML = open(\"AgroNews.xml\",\"r\")\n",
+        "soup = BeautifulSoup(arquivoXML.read(), \"html.parser\")\n",
+        "arquivoXML.close()\n",
+        "\n",
+        "listaN = soup.find_all(\"a\")[47 : 84 : 4]\n",
+        "print(listaN)\n",
+        "\n",
+        "#for i in listaN:\n",
+        "#  print (i)\n",
+        "\n",
+        "dados = [['Link']]\n",
+        "\n",
+        "for i in dados :\n",
+        "  print(i)\n",
+        "\n",
+        "with open('agronews.csv', 'w', newline='', encoding='utf-8') as arquivo_CSV:\n",
+        "    escritor = csv.writer(arquivo_CSV)\n",
+        "\n",
+        "    for linha in dados:\n",
+        "        escritor.writerow(linha)"
+      ],
+      "metadata": {
+        "id": "0WBV-iQ2oCu2",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "outputId": "d058a3c4-f8c1-4d84-f21c-376aa79f3d96"
+      },
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "[<a href=\"\">Search</a>, <a href=\"https://agronews.tv.br/agricultura-de-decisao-robos-autonomos-e-controle-de-pragas/\"><i class=\"fa fa-clock-o\"></i> 8 de maio de 2023</a>, <a href=\"https://agronews.tv.br/manejo-integrado-de-pragas-mip-pode-reduzir-em-50-aplicacao-de-inseticidas/\"><i class=\"fa fa-clock-o\"></i> 27 de junho de 2022</a>, <a href=\"https://agronews.tv.br/confira-como-usar-insetos-para-controlar-pragas-nas-lavouras/\"><i class=\"fa fa-clock-o\"></i> 3 de março de 2024</a>, <a href=\"https://agronews.tv.br/alem-de-clima-pragas-acentuam-queda-da-produtividade-do-milho/\"><i class=\"fa fa-clock-o\"></i> 3 de março de 2024</a>, <a href=\"https://agronews.tv.br/pragas-de-pastagens-merecem-maior-atencao-dos-pecuaristas/\"><i class=\"fa fa-clock-o\"></i> 3 de março de 2024</a>, <a href=\"https://agronews.tv.br/feijao-pragas-e-doencas-podem-causar-explosao-no-preco-e-falta-na-mesa/\"><i class=\"fa fa-clock-o\"></i> 25 de fevereiro de 2021</a>, <a href=\"https://agronews.tv.br/novo-bioinseticida-combate-pragas-nas-lavouras-de-soja-milho-e-algodao/\"><i class=\"fa fa-clock-o\"></i> 3 de fevereiro de 2021</a>, <a href=\"https://agronews.tv.br/produtor-analise-do-mapa-mostra-que-sementes-recebidas-contem-pragas/\"><i class=\"fa fa-clock-o\"></i> 26 de novembro de 2020</a>, <a href=\"https://agronews.tv.br/oleo-essencial-de-planta-amazonica-controla-pragas-importantes-da-agricultura/\"><i class=\"fa fa-clock-o\"></i> 17 de novembro de 2020</a>]\n",
+            "['Link']\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "from bs4 import BeautifulSoup\n",
+        "arquivoXML = open(\"BrasilAgro.xml\",\"r\")\n",
+        "soup = BeautifulSoup(arquivoXML.read(), \"html.parser\")\n",
+        "arquivoXML.close()\n",
+        "\n",
+        "listaN = soup.find_all(\"h3\")[0 : 12]\n",
+        "print(listaN)\n",
+        "\n",
+        "#for i in listaN:\n",
+        "#  print (i.text)\n",
+        "\n",
+        "print('\\n')\n",
+        "\n",
+        "dados = [['Titulo','Link']]\n",
+        "\n",
+        "prefix = 'https://www.brasilagro.com.br/'\n",
+        "for i in listaN:\n",
+        "  dados.append([i.text, prefix+i.parent.parent.parent.a['href']])\n",
+        "  #print (prefix+i.parent.parent.parent.a['href'], '\\n')\n",
+        "\n",
+        "for i in dados:\n",
+        "  print(i)\n",
+        "\n",
+        "with open('brasilagro.csv', 'w', newline='', encoding='utf-8') as arquivo_CSV:\n",
+        "    escritor = csv.writer(arquivo_CSV)\n",
+        "\n",
+        "    for linha in dados:\n",
+        "        escritor.writerow(linha)"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "s-6BqF-3ZsOt",
+        "outputId": "92a3666c-a31c-4dfc-9172-463fa6aee17e"
+      },
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "[<h3 class=\"title\">CTC: Acordo com empresa dos EUA em busca de soluções para combater pragas</h3>, <h3 class=\"title\">Robôs estão prontos para eliminar pragas das lavouras em larga escala</h3>, <h3 class=\"title\">Conab reduz projeção de safra de milho por seca e ataque de pragas</h3>, <h3 class=\"title\">Pesquisa: Genes responsáveis por resistência da cana a pragas, frio ou seca</h3>, <h3 class=\"title\">Controle biológico de pragas e doenças avança no país</h3>, <h3 class=\"title\">Agtech usa drones para controle biológico de pragas cresce 8 vezes em 2020</h3>, <h3 class=\"title\">Bayer venderá unidade de controle de pragas avaliada em € 2 bilhões</h3>, <h3 class=\"title\">Produção de açúcar da UE deve cair devido a ataques de pragas</h3>, <h3 class=\"title\">Controle biológico de pragas e doenças cresce 20% ao ano no Brasil</h3>, <h3 class=\"title\">Centro de Pesquisa para o controle biológico de pragas da cana </h3>, <h3 class=\"title\">Cientistas aliam nanotecnologia e produtos naturais para combater pragas</h3>, <h3 class=\"title\">Pessoas e pragas – Por J. R. Guzzo</h3>]\n",
+            "\n",
+            "\n",
+            "['Titulo', 'Link']\n",
+            "['CTC: Acordo com empresa dos EUA em busca de soluções para combater pragas', 'https://www.brasilagro.com.br/conteudo/ctc-acordo-com-empresa-dos-eua-em-busca-de-solucoes-para-combater-pragas.html']\n",
+            "['Robôs estão prontos para eliminar pragas das lavouras em larga escala', 'https://www.brasilagro.com.br/conteudo/robos-estao-prontos-para-eliminar-pragas-das-lavouras-em-larga-escala.html']\n",
+            "['Conab reduz projeção de safra de milho por seca e ataque de pragas', 'https://www.brasilagro.com.br/conteudo/conab-reduz-projecao-de-safra-de-milho-por-seca-e-ataque-de-pragas.html']\n",
+            "['Pesquisa: Genes responsáveis por resistência da cana a pragas, frio ou seca', 'https://www.brasilagro.com.br/conteudo/pesquisa-genes-responsaveis-por-resistencia-da-cana-a-pragas-frio-ou-seca.html']\n",
+            "['Controle biológico de pragas e doenças avança no país', 'https://www.brasilagro.com.br/conteudo/controle-biologico-de-pragas-e-doencas-avanca-no-pais.html']\n",
+            "['Agtech usa drones para controle biológico de pragas cresce 8 vezes em 2020', 'https://www.brasilagro.com.br/conteudo/agtech-usa-drones-para-controle-biologico-de-pragas-cresce-8-vezes-em-2020.html']\n",
+            "['Bayer venderá unidade de controle de pragas avaliada em € 2 bilhões', 'https://www.brasilagro.com.br/conteudo/bayer-vendera-unidade-de-controle-de-pragas-avaliada-em-2-bilhoes.html']\n",
+            "['Produção de açúcar da UE deve cair devido a ataques de pragas', 'https://www.brasilagro.com.br/conteudo/producao-de-acucar-da-ue-deve-cair-devido-a-ataques-de-pragas.html']\n",
+            "['Controle biológico de pragas e doenças cresce 20% ao ano no Brasil', 'https://www.brasilagro.com.br/conteudo/controle-biologico-de-pragas-e-doencas-cresce-20-ao-ano-no-brasil.html']\n",
+            "['Centro de Pesquisa para o controle biológico de pragas da cana ', 'https://www.brasilagro.com.br/conteudo/centro-de-pesquisa-para-o-controle-biologico-de-pragas-da-cana-.html']\n",
+            "['Cientistas aliam nanotecnologia e produtos naturais para combater pragas', 'https://www.brasilagro.com.br/conteudo/cientistas-aliam-nanotecnologia-e-produtos-naturais-para-combater-pragas.html']\n",
+            "['Pessoas e pragas – Por J. R. Guzzo', 'https://www.brasilagro.com.br/conteudo/pessoas-e-pragas-por-j-r-guzzo.html']\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "from bs4 import BeautifulSoup\n",
+        "arquivoXML = open(\"CanalRural.xml\",\"r\")\n",
+        "soup = BeautifulSoup(arquivoXML.read(), \"html.parser\")\n",
+        "arquivoXML.close()\n",
+        "\n",
+        "\n",
+        "\n",
+        "#listaN = soup.find_all('article', class_='feed feed-lg-v1 g-col-12')\n",
+        "#print(listaN)\n",
+        "\n",
+        "for i in listaN:\n",
+        " print (i.a['href'])\n",
+        "\n",
+        "dados = [['Titulo']]\n",
+        "\n",
+        "for i in dados :\n",
+        "  print(i)\n",
+        "\n",
+        "#with open('canalrural.csv', 'w', newline='', encoding='utf-8') as arquivo_CSV:\n",
+        "#    escritor = csv.writer(arquivo_CSV)\n",
+        "\n",
+        "#for linha in dados:\n",
+        "#    escritor.writerow(linha)"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 211
+        },
+        "id": "qe0q4Rj3oNKR",
+        "outputId": "e0d5c844-b588-487b-912a-f108c35ba8ed"
+      },
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "error",
+          "ename": "TypeError",
+          "evalue": "'NoneType' object is not subscriptable",
+          "traceback": [
+            "\u001b[0;31m---------------------------------------------------------------------------\u001b[0m",
+            "\u001b[0;31mTypeError\u001b[0m                                 Traceback (most recent call last)",
+            "\u001b[0;32m<ipython-input-33-af005b027053>\u001b[0m in \u001b[0;36m<cell line: 11>\u001b[0;34m()\u001b[0m\n\u001b[1;32m     10\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m     11\u001b[0m \u001b[0;32mfor\u001b[0m \u001b[0mi\u001b[0m \u001b[0;32min\u001b[0m \u001b[0mlistaN\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m---> 12\u001b[0;31m  \u001b[0mprint\u001b[0m \u001b[0;34m(\u001b[0m\u001b[0mi\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0ma\u001b[0m\u001b[0;34m[\u001b[0m\u001b[0;34m'href'\u001b[0m\u001b[0;34m]\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m     13\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m     14\u001b[0m \u001b[0mdados\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0;34m[\u001b[0m\u001b[0;34m[\u001b[0m\u001b[0;34m'Titulo'\u001b[0m\u001b[0;34m]\u001b[0m\u001b[0;34m]\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
+            "\u001b[0;31mTypeError\u001b[0m: 'NoneType' object is not subscriptable"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "!pip install pandas"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "collapsed": true,
+        "id": "EaJ6OlEDRPNh",
+        "outputId": "941c9e85-320e-4800-a8dc-38e3a1ab71e1"
+      },
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Requirement already satisfied: pandas in /usr/local/lib/python3.10/dist-packages (2.0.3)\n",
+            "Requirement already satisfied: python-dateutil>=2.8.2 in /usr/local/lib/python3.10/dist-packages (from pandas) (2.8.2)\n",
+            "Requirement already satisfied: pytz>=2020.1 in /usr/local/lib/python3.10/dist-packages (from pandas) (2023.4)\n",
+            "Requirement already satisfied: tzdata>=2022.1 in /usr/local/lib/python3.10/dist-packages (from pandas) (2024.1)\n",
+            "Requirement already satisfied: numpy>=1.21.0 in /usr/local/lib/python3.10/dist-packages (from pandas) (1.25.2)\n",
+            "Requirement already satisfied: six>=1.5 in /usr/local/lib/python3.10/dist-packages (from python-dateutil>=2.8.2->pandas) (1.16.0)\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "import csv\n",
+        "\n",
+        "dados = [\n",
+        "    [\"Titulo\", \"link\"],\n",
+        "    [\"A revolução será: Agricultura de DECISÃO, robôs autônomos e controle de pragas sem uso de defensivos\", \"https://agronews.tv.br/agricultura-de-decisao-robos-autonomos-e-controle-de-pragas/\"],\n",
+        "    [\"Manejo integrado de pragas (MIP) pode reduzir em 50% aplicação de inseticidas\", \"https://agronews.tv.br/manejo-integrado-de-pragas-mip-pode-reduzir-em-50-aplicacao-de-inseticidas/\"],\n",
+        "    [\"Confira como usar insetos para controlar pragas nas lavouras\", \"https://agronews.tv.br/confira-como-usar-insetos-para-controlar-pragas-nas-lavouras/\"],\n",
+        "    [\"Além de clima, pragas acentuam queda da produtividade do milho\", \"https://agronews.tv.br/alem-de-clima-pragas-acentuam-queda-da-produtividade-do-milho/\"],\n",
+        "    [\"Pragas de pastagens merecem maior atenção dos pecuaristas\", \"https://agronews.tv.br/pragas-de-pastagens-merecem-maior-atencao-dos-pecuaristas/\"],\n",
+        "    [\"Feijão: pragas e doenças podem causar explosão no preço e falta na mesa\", \"https://agronews.tv.br/feijao-pragas-e-doencas-podem-causar-explosao-no-preco-e-falta-na-mesa/\"],\n",
+        "    [\"Novo bioinseticida combate pragas nas lavouras de soja, milho e algodão\", \"https://agronews.tv.br/novo-bioinseticida-combate-pragas-nas-lavouras-de-soja-milho-e-algodao/\"],\n",
+        "    [\"Produtor, análise do Mapa mostra que sementes recebidas contêm pragas\", \"https://agronews.tv.br/produtor-analise-do-mapa-mostra-que-sementes-recebidas-contem-pragas/\"],\n",
+        "    [\"Óleo essencial de planta amazônica controla pragas importantes da agricultura\", \"https://agronews.tv.br/oleo-essencial-de-planta-amazonica-controla-pragas-importantes-da-agricultura/\"],\n",
+        "    [\"‘Patos Pesticidas’ devoram as pragas de arroz\", \"https://agronews.tv.br/patos-pesticidas-devoram-as-pragas-de-arroz/\"]\n",
+        "]\n",
+        "\n",
+        "with open('agronews.csv', 'w', newline='', encoding='utf-8') as arquivo_CSV:\n",
+        "    escritor = csv.writer(arquivo_CSV)\n",
+        "\n",
+        "    for linha in dados:\n",
+        "        escritor.writerow(linha)"
+      ],
+      "metadata": {
+        "id": "ZsSRkGIgR9gD"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "import csv\n",
+        "\n",
+        "dados = [\n",
+        "    [\"Titulo\", \"link\"],\n",
+        "    [\"CTC: Acordo com empresa dos EUA em busca de soluções para combater pragas\", \"https://www.brasilagro.com.br/conteudo/ctc-acordo-com-empresa-dos-eua-em-busca-de-solucoes-para-combater-pragas.html\"],\n",
+        "    [\"Robôs estão prontos para eliminar pragas das lavouras em larga escala\", \"https://www.brasilagro.com.br/conteudo/robos-estao-prontos-para-eliminar-pragas-das-lavouras-em-larga-escala.html\"],\n",
+        "    [\"Conab reduz projeção de safra de milho por seca e ataque de pragas\", \"https://www.brasilagro.com.br/conteudo/conab-reduz-projecao-de-safra-de-milho-por-seca-e-ataque-de-pragas.html\"],\n",
+        "    [\"Pesquisa: Genes responsáveis por resistência da cana a pragas, frio ou seca\", \"https://www.brasilagro.com.br/conteudo/pesquisa-genes-responsaveis-por-resistencia-da-cana-a-pragas-frio-ou-seca.html\"],\n",
+        "    [\"Controle biológico de pragas e doenças avança no país\", \"https://www.brasilagro.com.br/conteudo/controle-biologico-de-pragas-e-doencas-avanca-no-pais.html\"],\n",
+        "    [\"Agtech usa drones para controle biológico de pragas cresce 8 vezes em 2020\", \"https://www.brasilagro.com.br/conteudo/agtech-usa-drones-para-controle-biologico-de-pragas-cresce-8-vezes-em-2020.html\"],\n",
+        "    [\"Bayer venderá unidade de controle de pragas avaliada em € 2 bilhões\", \"https://www.brasilagro.com.br/conteudo/bayer-vendera-unidade-de-controle-de-pragas-avaliada-em-2-bilhoes.html\"],\n",
+        "    [\"Produção de açúcar da UE deve cair devido a ataques de pragas\", \"https://www.brasilagro.com.br/conteudo/controle-biologico-de-pragas-e-doencas-cresce-20-ao-ano-no-brasil.html\"],\n",
+        "    [\"Controle biológico de pragas e doenças cresce 20% ao ano no Brasil\", \"https://www.brasilagro.com.br/conteudo/centro-de-pesquisa-para-o-controle-biologico-de-pragas-da-cana-.html\"],\n",
+        "    [\"Centro de Pesquisa para o controle biológico de pragas da cana\", \"https://www.brasilagro.com.br/conteudo/centro-de-pesquisa-para-o-controle-biologico-de-pragas-da-cana-.html\"],\n",
+        "    [\"Cientistas aliam nanotecnologia e produtos naturais para combater pragas\", \"https://www.brasilagro.com.br/conteudo/cientistas-aliam-nanotecnologia-e-produtos-naturais-para-combater-pragas.html\"],\n",
+        "    [\"Pessoas e pragas – Por J. R. Guzzo\", \"https://www.brasilagro.com.br/conteudo/pessoas-e-pragas-por-j-r-guzzo.html\"]\n",
+        "    ]\n",
+        "\n",
+        "with open('brasilagro.csv', 'w', newline='', encoding='utf-8') as arquivo_CSV:\n",
+        "    escritor = csv.writer(arquivo_CSV)\n",
+        "\n",
+        "    for linha in dados:\n",
+        "        escritor.writerow(linha)"
+      ],
+      "metadata": {
+        "id": "bD4P2s50Ve2F"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "import csv\n",
+        "\n",
+        "dados = [\n",
+        "    [\"Titulo\", \"link\"],\n",
+        "    [\"ctc faz parceria com empresa dos eua em busca de solucoes para combater pragas\", \"https://www.canalrural.com.br/agricultura/ctc-faz-parceria-com-empresa-dos-eua-em-busca-de-solucoes-para-combater-pragas/\"],\n",
+        "    [\"estudo revela eficacia do controle biologico contra praga do campo\", \"https://www.canalrural.com.br/agricultura/estudo-revela-eficacia-do-controle-biologico-contra-praga-do-campo/\"],\n",
+        "    [\"pesquisa identifica praga do tomate que pode reduzir ate 80% da produtividade\", \"https://www.canalrural.com.br/agricultura/pesquisa-identifica-praga-do-tomate-que-pode-reduzir-ate-80-da-produtividade/\"],\n",
+        "    [\"safra de tomate retrocede e deve voltar ao patamar de 2022\", \"https://www.canalrural.com.br/agricultura/safra-de-tomate-retrocede-e-deve-voltar-ao-patamar-de-2022/\"],\n",
+        "    [\"agente biologico auxilia no controles broca das pontas no cajueiro\", \"https://www.canalrural.com.br/agricultura/agente-biologico-auxilia-no-controles-broca-das-pontas-no-cajueiro/\"],\n",
+        "    [\"governo combate comercio ambulante de plantas ornamentais\", \"https://www.canalrural.com.br/agricultura/governo-combate-comercio-ambulante-de-plantas-ornamentais/\"],\n",
+        "    [\"10 dicas para evitar que as cigarrinhas se tornem um prejuizo milionario as lavouras de milho\", \"https://www.canalrural.com.br/agricultura/10-dicas-para-evitar-que-as-cigarrinhas-se-tornem-um-prejuizo-milionario-as-lavouras-de-milho/\"],\n",
+        "    [\"atibaia se torna referencia nacional na producao do morango fenix\", \"https://www.canalrural.com.br/agricultura/atibaia-se-torna-referencia-nacional-na-producao-do-morango-fenix/\"],\n",
+        "    [\"corredores ecologicos auxiliam no controle de pragas em cafezais\", \"https://www.canalrural.com.br/agricultura/corredores-ecologicos-auxiliam-no-controle-de-pragas-em-cafezais/\"],\n",
+        "    [\"mais de 6 toneladas de frutas são apreendidas e destruidas por falta de documentacao\", \"https://www.canalrural.com.br/agricultura/mais-de-6-toneladas-de-frutas-sao-apreendidas-e-destruidas-por-falta-de-documentacao/\"],\n",
+        "    [\"manejo integrado pode impulsionar produtividade de soja em 24/25\", \"https://www.canalrural.com.br/agricultura/projeto-soja-brasil/manejo-integrado-pode-impulsionar-produtividade-de-soja-em-24-25/\"],\n",
+        "    [\"plantio- e amendoim direto na palha reduz custo de producao em ate 20% e erosao em 90%\", \"https://www.canalrural.com.br/agricultura/plantio-de-amendoim-direto-na-palha-reduz-custo-de-producao-em-ate-20-e-erosao-em-90/\"],\n",
+        "    [\"gafanhotos colocam argentina em alerta paises vizinhos trabalham para mitigar impactos\", \"https://www.canalrural.com.br/agricultura/gafanhotos-colocam-argentina-em-alerta-paises-vizinhos-trabalham-para-mitigar-impactos/\"],\n",
+        "    [\"cientistas usam sinais vibratorios para manejar percevejos\", \"https://www.canalrural.com.br/agricultura/cientistas-usam-sinais-vibratorios-para-manejar-percevejos/\"],\n",
+        "    [\"MAPA fiscaliza embalagens de carros que vão disputar formula e em são paulo\", \"https://www.canalrural.com.br/agricultura/mapa-fiscaliza-embalagens-de-carros-que-vao-disputar-formula-e-em-sao-paulo/\"],\n",
+        "    [\"bicudo do algodoeiro foi tema de workshop no oeste da bahia\", \"https://www.canalrural.com.br/nacional/bahia/bicudo-do-algodoeiro-foi-tema-de-workshop-no-oeste-da-bahia/\"],\n",
+        "    [\"embrapa lanca novas cultivares de soja e promete produtividade\", \"https://www.canalrural.com.br/agricultura/embrapa-lanca-novas-cultivares-de-soja-e-promete-produtividade/\"],\n",
+        "    [\"clima faz area de soja tratada com defensivos aumentar em 37%\", \"https://www.canalrural.com.br/agricultura/projeto-soja-brasil/clima-faz-area-de-soja-tratada-com-defensivos-aumentar-em-37/\"],\n",
+        "    [\"el-nino antecipou o ciclo da soja no parana e levou mais pragas\", \"https://www.canalrural.com.br/agricultura/projeto-soja-brasil/el-nino-antecipou-o-ciclo-da-soja-no-parana-e-levou-mais-pragas/\"],\n",
+        "    [\"você viu estado vai barrar entrada de maquinas agricolas sujas\", \"https://www.canalrural.com.br/agricultura/voce-viu-estado-vai-barrar-entrada-de-maquinas-agricolas-sujas/\"]\n",
+        "    ]\n",
+        "\n",
+        "with open('canalrural.csv', 'w', newline='', encoding='utf-8') as arquivo_CSV:\n",
+        "    escritor = csv.writer(arquivo_CSV)\n",
+        "\n",
+        "    for linha in dados:\n",
+        "        escritor.writerow(linha)"
+      ],
+      "metadata": {
+        "id": "zl3deimFWlZK"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "import csv\n",
+        "\n",
+        "dados = [\n",
+        "    [\"Nome\", \"Idade\", \"Cidade\"],\n",
+        "    [\"João\", 30, \"São Paulo\"],\n",
+        "    [\"Maria\", 25, \"Rio de Janeiro\"],\n",
+        "    [\"José\", 35, \"Belo Horizonte\"]\n",
+        "]\n",
+        "\n",
+        "with open('dados.csv', 'w', newline='', encoding='utf-8') as arquivo_CSV:\n",
+        "    escritor = csv.writer(arquivo_CSV)\n",
+        "\n",
+        "    for linha in dados:\n",
+        "        escritor.writerow(linha)"
+      ],
+      "metadata": {
+        "id": "NNhcYKprqXmh"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "import csv\n",
+        "\n",
+        "dados=[{\"Nome\":\"João\", \"Idade\":30, \"Cidade\":\"São Paulo\"},\n",
+        " {\"Nome\":\"Maria\", \"Idade\":25, \"Cidade\":\"Rio de Janeiro\"}]\n",
+        "\n",
+        "with open ('dados_did.csv', 'w', newline='', encoding='utf-8') as arquivo_CSV:\n",
+        "    colunas = ['Nome', 'Idade', 'Cidade']\n",
+        "    escritor = csv.DictWriter(arquivo_CSV, fieldnames=colunas)\n",
+        "    escritor.writeheader()\n",
+        "    for linha in dados:\n",
+        "        escritor.writerow(linha)"
+      ],
+      "metadata": {
+        "id": "BUS9TAJ8xExz"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "import pandas as pd\n",
+        "\n",
+        "dados = {\n",
+        "    \"Nome\": [\"João\", \"Maria\", \"José\"],\n",
+        "    \"Idade\": [30, 25, 35],\n",
+        "    \"Cidade\": [\"São Paulo\", \"Rio de Janeiro\", \"Belo Horizonte\"]}\n",
+        "\n",
+        "df = pd.DataFrame(dados)\n",
+        "print(df)\n",
+        "\n",
+        "df.to_csv('dados_panda.csv', index=False)"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "f1T9Fc2C1YoS",
+        "outputId": "fa0ec8d7-3b54-423f-80d3-8b15fc9e0204"
+      },
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "    Nome  Idade          Cidade\n",
+            "0   João     30       São Paulo\n",
+            "1  Maria     25  Rio de Janeiro\n",
+            "2   José     35  Belo Horizonte\n"
+          ]
+        }
+      ]
+    }
+  ]
+}
